@@ -68,6 +68,7 @@ add_executable( gauxc_test
   runtime.cxx
   vv10_nlc_test.cxx
   vv10_test.cxx
+  cuest_api_test.cxx
   basis/parse_basis.cxx
   dd_psi_potential_test.cxx
   2nd_derivative_test.cxx
@@ -95,6 +96,28 @@ add_executable( vv10_benchmark vv10_benchmark.cxx )
 target_link_libraries( vv10_benchmark PUBLIC gauxc Eigen3::Eigen )
 target_include_directories( vv10_benchmark PRIVATE ${PROJECT_BINARY_DIR}/tests )
 target_include_directories( vv10_benchmark PRIVATE ${PROJECT_SOURCE_DIR}/tests )
+
+if(GAUXC_HAS_CUEST_API)
+  add_executable( cuest_comparison_case cuest_comparison_case.cxx )
+  target_link_libraries( cuest_comparison_case PUBLIC gauxc Eigen3::Eigen )
+  target_include_directories( cuest_comparison_case PRIVATE ${PROJECT_BINARY_DIR}/tests )
+  target_include_directories( cuest_comparison_case PRIVATE ${PROJECT_SOURCE_DIR}/tests )
+  find_library( CUEST_LIBRARY NAMES cuest
+    PATHS "$ENV{CONDA_PREFIX}/lib" "/opt/gauxc/lib"
+  )
+  if(CUEST_LIBRARY AND GAUXC_HAS_CUDA)
+    find_package( CUDAToolkit REQUIRED )
+    target_compile_definitions( cuest_comparison_case PRIVATE GAUXC_BENCHMARK_HAS_CUEST=1 )
+    target_include_directories( cuest_comparison_case PRIVATE "$ENV{CONDA_PREFIX}/include" "/opt/gauxc/include" )
+    target_link_libraries( cuest_comparison_case PRIVATE ${CUEST_LIBRARY} CUDA::cudart )
+  endif()
+endif()
+
+if(GAUXC_HAS_CUEST_ABI)
+  add_executable( cuest_abi_compile_test cuest_abi_compile_test.cxx )
+  target_link_libraries( cuest_abi_compile_test PUBLIC gauxc )
+  add_test( NAME GAUXC_CUEST_ABI_COMPILE_TEST COMMAND $<TARGET_FILE:cuest_abi_compile_test> )
+endif()
 
 #add_executable( grid_opt grid_opt.cxx standards.cxx basis/parse_basis.cxx ini_input.cxx )
 #target_link_libraries( grid_opt PUBLIC gauxc gauxc_catch2 Eigen3::Eigen )

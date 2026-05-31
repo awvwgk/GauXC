@@ -19,6 +19,8 @@
 #cmakedefine GAUXC_HAS_MAGMA
 #cmakedefine GAUXC_HAS_NCCL
 #cmakedefine GAUXC_HAS_CUTLASS
+#cmakedefine GAUXC_HAS_CUEST_API
+#cmakedefine GAUXC_HAS_CUEST_ABI
 #cmakedefine GAUXC_HAS_GAU2GRID
 #cmakedefine GAUXC_HAS_HDF5
 #cmakedefine GAUXC_USE_FAST_RSQRT

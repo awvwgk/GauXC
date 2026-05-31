@@ -44,10 +44,15 @@ add_library( gauxc
 
 if( GAUXC_ENABLE_C )
   message( STATUS "GauXC Enabling C API" )
-  add_subdirectory(c-api)
   set(GAUXC_HAS_C TRUE CACHE BOOL "GauXC Has C API" FORCE)
+  add_subdirectory(c-api)
 else()
   message( STATUS "GauXC Disabling C API" )
+endif()
+
+if( GAUXC_HAS_CUEST_API )
+  message( STATUS "GauXC Enabling cuEST-compatible API" )
+  add_subdirectory(cuest-api)
 endif()
 
 
@@ -154,6 +159,8 @@ set(export_properties
   "GAUXC_HAS_MPI"
   "GAUXC_HAS_OPENMP"
   "GAUXC_HAS_HDF5"
+  "GAUXC_HAS_CUEST_API"
+  "GAUXC_HAS_CUEST_ABI"
  
   # may become configurable in the future
   "GAUXC_CPU_XC_MAX_AM"
@@ -175,6 +182,8 @@ set_target_properties(gauxc
     "GAUXC_HAS_MPI"        ${GAUXC_HAS_MPI}
     "GAUXC_HAS_OPENMP"     ${GAUXC_HAS_OPENMP}
     "GAUXC_HAS_HDF5"       ${GAUXC_HAS_HDF5}
+    "GAUXC_HAS_CUEST_API"  ${GAUXC_HAS_CUEST_API}
+    "GAUXC_HAS_CUEST_ABI"  ${GAUXC_HAS_CUEST_ABI}
     "GAUXC_CPU_XC_MAX_AM"     ${GAUXC_CPU_XC_MAX_AM}     
     "GAUXC_CPU_SNLINK_MAX_AM" ${GAUXC_CPU_SNLINK_MAX_AM}
     "GAUXC_GPU_XC_MAX_AM"     ${GAUXC_GPU_XC_MAX_AM}     

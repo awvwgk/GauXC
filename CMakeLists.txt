@@ -53,6 +53,14 @@ cmake_dependent_option( GAUXC_ENABLE_CUTLASS
   "Enable CUTLASS Linear Algebra" OFF  
   "GAUXC_ENABLE_CUDA"             OFF 
 )
+cmake_dependent_option( GAUXC_ENABLE_CUEST_API
+  "Enable cuEST-compatible GauXC C API" OFF
+  "GAUXC_ENABLE_C;GAUXC_ENABLE_CUDA"    OFF
+)
+cmake_dependent_option( GAUXC_ENABLE_CUEST_ABI
+  "Enable cuEST ABI-compatible symbols" OFF
+  "GAUXC_ENABLE_CUEST_API"              OFF
+)
 
 # Default the feature variables
 set( GAUXC_HAS_C          FALSE CACHE BOOL "" FORCE )
@@ -66,6 +74,8 @@ set( GAUXC_HAS_HDF5       FALSE CACHE BOOL "" FORCE )
 set( GAUXC_HAS_MAGMA      FALSE CACHE BOOL "" FORCE )
 set( GAUXC_HAS_NCCL       FALSE CACHE BOOL "" FORCE )
 set( GAUXC_HAS_CUTLASS    FALSE CACHE BOOL "" FORCE )
+set( GAUXC_HAS_CUEST_API  FALSE CACHE BOOL "" FORCE )
+set( GAUXC_HAS_CUEST_ABI  FALSE CACHE BOOL "" FORCE )
 set( GAUXC_BLAS_IS_LP64   FALSE CACHE BOOL "" FORCE )
 
 mark_as_advanced( FORCE 
@@ -80,6 +90,8 @@ mark_as_advanced( FORCE
   GAUXC_HAS_MAGMA    
   GAUXC_HAS_NCCL     
   GAUXC_HAS_CUTLASS  
+  GAUXC_HAS_CUEST_API
+  GAUXC_HAS_CUEST_ABI
   GAUXC_BLAS_IS_LP64 
 )
 
@@ -97,6 +109,14 @@ endif()
 if( GAUXC_ENABLE_CUDA )
   enable_language( CUDA )
   set( GAUXC_HAS_CUDA TRUE CACHE BOOL "GauXC has CUDA and will build CUDA bindings" FORCE )
+endif()
+
+if( GAUXC_ENABLE_CUEST_API )
+  set( GAUXC_HAS_CUEST_API TRUE CACHE BOOL "GauXC has cuEST-compatible API" FORCE )
+endif()
+
+if( GAUXC_ENABLE_CUEST_ABI )
+  set( GAUXC_HAS_CUEST_ABI TRUE CACHE BOOL "GauXC has cuEST-compatible ABI symbols" FORCE )
 endif()
 
 if( GAUXC_ENABLE_HIP )
